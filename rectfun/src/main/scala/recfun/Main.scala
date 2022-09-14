@@ -11,7 +11,7 @@ object Main {
       println()
     }
      */
-    println(balance("I told him (that it's not (yet) done).\n(But he wasn't listening)".toList))
+    println(countChange(301,List(5,10,20,50,100,200,500)) == 0)
 
   }
 
@@ -53,8 +53,22 @@ object Main {
    * Exercise 3
    */
   def countChange(money: Int, coins: List[Int]): Int = {
-   // coins.find
-  5
-
+    /*
+    coins.foreach{
+      x=>
+      if(money-x>0)
+        countChange(money-x,coins)
+      else if (money-x==0)
+    }*/
+    if (money<0)
+      0
+    else if (money == 0)
+      1
+    else {
+      var sum = 0
+      for(coin<-coins)
+        sum+=countChange(money-coin,coins)
+      sum
+    }
   }
 }
