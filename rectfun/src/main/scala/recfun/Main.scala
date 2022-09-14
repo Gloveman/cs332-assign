@@ -11,7 +11,8 @@ object Main {
       println()
     }
      */
-    println(balance("(if (zero? x) max (/ 1 x))".toList))
+    println(balance("I told him (that it's not (yet) done).\n(But he wasn't listening)".toList))
+
   }
 
 
@@ -35,13 +36,25 @@ object Main {
    * Exercise 2
    */
   def balance(chars: List[Char]): Boolean = {
-    false
-
-
+    val end= chars.indexOf(')')
+    if (end == -1)
+      !chars.contains('(')
+    else {
+      val start = chars.slice(0,end).lastIndexOf('(')
+      if (start == -1) {
+        false
+      }
+      else
+      balance(chars.slice(0,start):::chars.slice(end+1,chars.length))
+    }
   }
 
   /**
    * Exercise 3
    */
-  def countChange(money: Int, coins: List[Int]): Int = 3
+  def countChange(money: Int, coins: List[Int]): Int = {
+   // coins.find
+  5
+
+  }
 }
