@@ -81,6 +81,8 @@ abstract class TweetSet {
    */
   def descendingByRetweet: TweetList
 
+  //for MostReTweet function (avoid exception)
+  def isEmpty: Boolean
 
   /**
    * The following methods are already implemented
@@ -114,12 +116,12 @@ class Empty extends TweetSet {
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet=acc
 
-  def union(that:TweetSet):TweetSet={
-      that
-  }
+  def union(that:TweetSet):TweetSet=that
   def mostRetweeted: Tweet = throw new java.util.NoSuchElementException("Empty Set!")
 
   def descendingByRetweet: TweetList = Nil
+
+  def isEmpty: Boolean=true
   /**
    * The following methods are already implemented
    */
@@ -143,26 +145,41 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     }
     else
     {
-      left filterAcc(p,right filterAcc(p,acc)
+      left filterAcc(p,right filterAcc(p,acc))
     }
 
   }
 
   def union(that: TweetSet): TweetSet = {
-    (left union right) union that incl elem
+    if (this.isEmpty)
+      that
+    else if (that.isEmpty)
+      this
+    else
+      //((left union right) union that) incl elem
+      this filterAcc(x=>true,that)
   }
   def mostRetweeted: Tweet ={
-    if (left.mostRetweeted.retweets>elem.retweets && left.mostRetweeted.retweets>right.mostRetweeted.retweets)
-      left.mostRetweeted
-    else if(right.mostRetweeted.retweets>elem.retweets && right.mostRetweeted.retweets>left.mostRetweeted.retweets)
-      right.mostRetweeted
-    else elem
+    def max(x:Tweet, y:Tweet):Tweet = if(x.retweets>y.retweets) x else y
+    if (left.isEmpty && right.isEmpty)
+      elem
+    else if (left.isEmpty)
+      max(elem,right.mostRetweeted)
+    else if (right.isEmpty)
+      max(elem,left.mostRetweeted)
+    else {
+      max(elem, max(left.mostRetweeted, right.mostRetweeted))
+    }
   }
 
   def descendingByRetweet: TweetList = {
-    new Cons(mostRetweeted, remove(mostRetweeted).descendingByRetweet)
+    if (left.isEmpty && right.isEmpty)
+      new Cons(elem,Nil)
+    else
+      new Cons(mostRetweeted, remove(mostRetweeted).descendingByRetweet)
 
   }
+  def isEmpty: Boolean=false
   /**
    * The following methods are already implemented
    */
