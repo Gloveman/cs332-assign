@@ -26,9 +26,17 @@ object Huffman {
 
   // Part 1: Basics
 
-  def weight(tree: CodeTree): Int = ??? // tree match ...
+  def weight(tree: CodeTree): Int = tree match {
+    case Fork(_, _, _, weight) => weight
+    case Leaf(_, weight) => weight
+  }
 
-  def chars(tree: CodeTree): List[Char] = ??? // tree match ...
+  // tree match ...
+
+  def chars(tree: CodeTree): List[Char] = tree match {
+    case Fork(_, _, chars, _) =>chars
+    case Leaf(char, _) => List(char)
+  }// tree match ...
 
   def makeCodeTree(left: CodeTree, right: CodeTree) =
     Fork(left, right, chars(left) ::: chars(right), weight(left) + weight(right))
@@ -203,4 +211,9 @@ object Huffman {
    * and then uses it to perform the actual encoding.
    */
   def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+}
+
+object Main extends App{
+  val Test=Huffman.makeCodeTree(Huffman.makeCodeTree(Huffman.Leaf('x',1),Huffman.Leaf('e',1)),Huffman.Leaf('t',2))
+  println(Huffman.chars(Test.right))
 }
