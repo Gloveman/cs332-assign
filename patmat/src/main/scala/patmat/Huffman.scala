@@ -280,6 +280,3 @@ object Huffman {
   def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = text.flatMap(codeBits(convert(tree)))
 }
 
-object Main extends App{
-    println(quickEncode(frenchCode)(decodedSecret))
-}
