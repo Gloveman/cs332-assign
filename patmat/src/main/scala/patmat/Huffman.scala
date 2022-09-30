@@ -126,10 +126,12 @@ object Huffman {
    * If `trees` is a list of less than two elements, that list should be returned
    * unchanged.
    */
-  def combine(trees: List[CodeTree]): List[CodeTree] = {
-    val tree1=trees.head
-    val tree2=trees.tail.head
-    (List(makeCodeTree(tree1,tree2)):::trees.tail.tail).sortBy(weight(_))
+  def combine(trees: List[CodeTree]): List[CodeTree] = { trees match{
+
+    case head::tail=> (List(makeCodeTree(head,tail.head)):::trees.tail.tail).sortBy(weight(_))
+    case _=> trees
+
+  }
   }
 
   /**
@@ -164,7 +166,6 @@ object Huffman {
     val InitList=makeOrderedLeafList(times(chars))
     until(singleton,combine)(InitList).head
   }
-
 
 
   // Part 3: Decoding
@@ -222,7 +223,7 @@ object Huffman {
       def getcode(tree:CodeTree, chr:Char,acc:List[Bit]): List[Bit]={
         tree match{
           case Leaf(_,_) => acc
-          case Fork(left,right,_,_)=>
+          case Fork(left, right, _, _) =>
             if (chars(left) contains chr)
               getcode(left,chr,acc:::List(0))
             else
